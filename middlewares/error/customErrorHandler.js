@@ -9,10 +9,9 @@ const customErrorHandler = (err, req, res, next) => {
         customError = new CustomError(err.message, 400)
 
     }
-    console.log(customError.name + "--" + customError.message, customError.status)
-    res.status(customError.status).json({
+    res.status(customError.status || 500).json({
         success: false,
-        message: err.message
+        message: customError.message
     })
 }
 
