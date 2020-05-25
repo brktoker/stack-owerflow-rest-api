@@ -12,11 +12,13 @@ dotenv.config({
 const PORT = process.env.PORT;
 
 
-
 mongoDbConnect()
+//express json body - middleware
+app.use(express.json())
 
 app.use('/api', routers)
 app.use(customErrorHandler)
+
 
 app.get('/', (req, res, next) => {
     res.send("<h1>Welcome Stack Owerflow Rest Api</h1>")
