@@ -23,7 +23,17 @@ const login = asyncErrorHandler(async (req, res, next) => {
 
     sendJwtToClient(user, res)
 });
-
+const uploadImage = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findByIdAndUpdate(req.user.id, {
+        "profile_image": req.savedProfileImage
+    }, { new: true })
+    res.status(200)
+        .json({
+            success: true,
+            message: "Upload İmage Successfull",
+            data: user
+        })
+})
 const logout = asyncErrorHandler(async (req, res, next) => {
 
     return res.status(200)
@@ -36,6 +46,8 @@ const logout = asyncErrorHandler(async (req, res, next) => {
             message: "Logouth Successful"
         })
 });
+
+
 const getuser = (req, res, next) => {
     res.json({
         status: true,
@@ -46,4 +58,4 @@ const getuser = (req, res, next) => {
     })
 }
 
-module.exports = { register, login,logout, getuser }
+module.exports = { register, login, logout, uploadImage, getuser }

@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv")
 const app = express();
-
+const path = require("path")
 const { customErrorHandler } = require('./middlewares/error/customErrorHandler')
 
 const routers = require("./routers/index")
@@ -18,7 +18,8 @@ app.use(express.json())
 
 app.use('/api', routers)
 app.use(customErrorHandler)
-
+//static files include
+app.use(express.static(path.join(__dirname,"public")))
 
 app.get('/', (req, res, next) => {
     res.send("<h1>Welcome Stack Owerflow Rest Api</h1>")
