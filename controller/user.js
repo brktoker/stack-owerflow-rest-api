@@ -5,7 +5,15 @@ const asyncErrorHandler = require('express-async-handler');
 const getSingleUser = asyncErrorHandler(async (req, res, next) => {
 
     const { id } = req.params;
-    const user = await User.findById(id)
+    const user = await User.findById(id);
+
+    res.status(200).json({
+        success: true,
+        data: user
+    })
+});
+const getAllUsers = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.find();
 
     res.status(200).json({
         success: true,
@@ -13,4 +21,4 @@ const getSingleUser = asyncErrorHandler(async (req, res, next) => {
     })
 });
 
-module.exports = { getSingleUser };
+module.exports = { getSingleUser,getAllUsers };
