@@ -26,4 +26,14 @@ const blockUser = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-module.exports = { adminPage,blockUser };
+const deleteUser = asyncErrorHandler(async (req, res, next) => {
+    const {id} = req.params;
+    await User.findByIdAndDelete(id)
+
+    return res.status(200).json({
+        success : true,
+        message : "User has been deleted."
+    })
+
+});
+module.exports = { adminPage,blockUser,deleteUser };

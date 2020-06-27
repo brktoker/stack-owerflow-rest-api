@@ -4,9 +4,9 @@ const asyncErrorHandler = require('express-async-handler');
 
 
 const checkUserExist = asyncErrorHandler(async (req, res, next) => {
-
+    
     const { id } = req.params;
-
+    console.log(id)
     const user = await User.findById(id);
 
     if (!user || user == null) {

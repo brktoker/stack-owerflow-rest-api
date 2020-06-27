@@ -110,14 +110,27 @@ const resetpassword = asyncErrorHandler(async (req, res, next) => {
     if (!user) {
         return next(new CustomError("invalid token or session", 400))
     }
-    user.password = password
-    user.resetPasswordToken = undefined
-    user.resetPasswordExpiresIn = undefined
-    await user.save()
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiresIn = undefined;
+    await user.save();
     res.status(200).json({
         succes: true,
         message: "Password reset succesfull"
-    })
+    });
 
 });
-module.exports = { register, login, logout, uploadImage, getuser, forgotpassword, resetpassword }
+
+const editUser = asyncErrorHandler(async (req, res, next) => {
+    const editInformation = req.body;
+    console.log(req.user)
+    const user = await User.findByIdAndUpdate(req.user.id,editInformation,{
+        new :true,
+        runValidators : true
+    });
+    return res.status(200).json({
+        success :true,
+        data : user
+    });
+});
+module.exports = { register, login, logout, uploadImage, getuser, forgotpassword, resetpassword,editUser }
