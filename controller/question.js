@@ -10,10 +10,51 @@ const askNewQuestion = asyncErrorHandler(async (req, res, next) => {
         user: req.user.id
     });
 
-    res.status(200).json({
+    return res.status(200).json({
         success: true,
-        data : question
+        data: question
     });
 });
 
-module.exports = { askNewQuestion };
+const getAllQuestions = asyncErrorHandler(async (req, res, next) => {
+    const questinons = await Question.find({});
+    return res.status(200).json({
+        success: true,
+        data: questinons
+    });
+});
+
+const getOneQuesiton = asyncErrorHandler(async (req, res, next) => {
+    const { id } = req.params;
+    const question = await Question.findById(id);
+    return res.status(200).json({
+        success: true,
+        data: question
+    });
+});
+
+const editQuestion = asyncErrorHandler(async (req, res, next) => {
+    const quesionId = req.params.id;
+    const information = req.body;
+    const question = await Question.findByIdAndUpdate(quesionId, information, {
+        new: true,
+        runValidators: true
+    });
+
+    return res.status(200).json({
+        success: true,
+        data: question
+    });
+});
+
+const deleteQuestion = asyncErrorHandler(async (req, res, next) => {
+    const { id } = req.params;
+    await Question.findOneAndDelete(id);
+
+    return res.status(200).json({
+        success: true,
+        message: "Question has been deleted"
+    });
+});
+
+module.exports = { askNewQuestion, getAllQuestions, getOneQuesiton, editQuestion, deleteQuestion };
