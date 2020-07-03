@@ -25,7 +25,7 @@ const QuestionSchema = new Schema({
         required: true,
         ref: "User"
     },
-    answer: [
+    answers: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Answer"
