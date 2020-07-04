@@ -56,5 +56,39 @@ const getSingleAnswer = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
+const updateAnswer = asyncErrorHandler(async (req, res, next) => {
+    const { answer_id } = req.params;
+    const information = req.body;
 
-module.exports = { addAnswerToQuestion, getAllAnswers, getSingleAnswer };
+    const answer = await Answer.findByIdAndUpdate(answer_id, information, {
+        new: true,
+        runValidators: true
+    });
+
+    res.status(200).json({
+        success: true,
+        data: answer
+    });
+});
+
+const deleteAnswer = asyncErrorHandler(async (req, res, next) => {
+    const { answer_id } = req.params;
+    const { question_id } = req.params;
+
+    await Answer.findByIdAndRemove(answer_id);
+    
+    // question in answer delete
+    const question = await Question.findById(question_id);
+    question.answers.splice(question.answers.indexOf(answer_id), 1);
+    await question.save();
+    //
+
+    return res.status(200).json({
+        success: true,
+        message: "Answer has been deleted"
+    });
+
+});
+
+
+module.exports = { addAnswerToQuestion, getAllAnswers, getSingleAnswer, updateAnswer, deleteAnswer };
