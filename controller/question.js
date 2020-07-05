@@ -17,10 +17,43 @@ const askNewQuestion = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getAllQuestions = asyncErrorHandler(async (req, res, next) => {
-    const questinons = await Question.find({});
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    const pagination = {};
+    const total = await Question.countDocuments();
+    if (startIndex > 0) {
+        pagination.previous = {
+            page: page - 1,
+            limit: limit
+        }
+    }
+    if (endIndex < total) {
+        pagination.next = {
+            page: page + 1,
+            limit: limit
+        }
+    }
+
+    const regex = new RegExp(req.query.search, "i");
+    const questinons = await Question.find()
+        .where({
+            title: regex
+        })
+        .populate("user")
+        .populate("answers")
+        .skip(startIndex)
+        .limit(limit);
+
     return res.status(200).json({
         success: true,
-        data: questinons
+        pagination: pagination,
+        data: questinons,
+        count: questinons.length
     });
 });
 
